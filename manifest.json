@@ -1,0 +1,16 @@
+{
+	"manifest_version": 3,
+	"name": "Calendar Event Filter",
+	"version": "1.0",
+	"description": "Filters Google Calendar events by keyword",
+	"permissions": ["storage", "activeTab", "scripting"],
+	"action": {
+		"default_popup": "popup.html"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://calendar.google.com/calendar/*"],
+			"js": ["content.js"]
+		}
+	]
+}
