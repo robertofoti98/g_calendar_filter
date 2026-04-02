@@ -4,13 +4,15 @@
 	"version": "1.0",
 	"description": "Filters Google Calendar events by keyword",
 	"permissions": ["storage", "activeTab", "scripting"],
-	"action": {
-		"default_popup": "popup.html"
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
 	},
 	"content_scripts": [
 		{
 			"matches": ["https://calendar.google.com/calendar/*"],
 			"js": ["content.js"]
 		}
-	]
+	],
+	"action": {}
 }
