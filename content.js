@@ -1,4 +1,4 @@
-// --- 1. FILTER LOGIC --
+// --- 1. FILTER LOGIC ---
 const EVENT_SELECTOR = '[role="button"][data-eventid]';
 
 function applyFilter(term) {
@@ -20,9 +20,12 @@ function applyFilter(term) {
 
 // --- 2. OBSERVER (For scrolling/view changes) ---
 const observer = new MutationObserver(() => {
-	chrome.storage.sync.get(["searchTerm"], (data) => {
-		applyFilter(data.searchTerm || "");
-	});
+	if (chrome.runtime?.id) {
+		chrome.storage.sync.get(["searchTerm"], (data) => {
+			if (chrome.runtime.lastError) return;
+			applyFilter(data.searchTerm || "");
+		});
+	}
 });
 observer.observe(document.body, { childList: true, subtree: true });
 
@@ -39,6 +42,7 @@ observer.observe(document.body, { childList: true, subtree: true });
             z-index: 10000;
             width: 260px;
             font-family: "Google Sans", Roboto, sans-serif;
+            display: none !important; 
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
@@ -101,19 +105,19 @@ observer.observe(document.body, { childList: true, subtree: true });
 	// This listens for when you click the extension icon in the toolbar
 	chrome.runtime.onMessage.addListener((request) => {
 		if (request.action === "toggle_popup") {
-			if (root.style.display === "none" || root.style.display === "") {
-				root.style.display = "block";
-				document.getElementById("ext-keyword").focus(); // Auto-focus input
+			const isHidden = window.getComputedStyle(root).display === "none";
+			if (isHidden) {
+				root.style.setProperty("display", "block", "important");
+				input.focus();
 			} else {
-				root.style.display = "none";
+				root.style.setProperty("display", "none", "important");
 			}
 		}
 	});
 
 	document.addEventListener("mousedown", (event) => {
-		// If the popup is visible AND the click was NOT inside the popup
-		if (root.style.display === "block" && !root.contains(event.target)) {
-			root.style.display = "none";
+		if (window.getComputedStyle(root).display === "block" && !root.contains(event.target)) {
+			root.style.setProperty("display", "none", "important");
 		}
 	});
 
