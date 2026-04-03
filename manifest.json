@@ -3,7 +3,7 @@
 	"name": "Calendar Event Filter",
 	"version": "1.0",
 	"description": "Filters Google Calendar events by keyword",
-	"permissions": ["storage", "activeTab", "scripting"],
+	"permissions": ["storage", "activeTab"],
 	"background": {
 		"service_worker": "background.js",
 		"type": "module"
